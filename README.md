@@ -1,86 +1,62 @@
-# CAPS - Attendance Management System
+# CAPS - Comprehensive Academic & Presence System
 
-A polished Next.js 14.2 web app for managing students, attendance, and grades, with data persisted in Google Sheets through Google Apps Script.
-
-## Stack
-
-- Next.js 14.2 (App Router)
-- React 18.3 + React DOM
-- TypeScript 5.6
-- Tailwind CSS 3.4
-- Recharts (dashboard visualizations)
+CAPS is a modern, responsive web application built with Next.js that streamlines student attendance tracking, academic grade management, and advanced analytics for educational institutions.
 
 ## Features
 
-- Login (demo auth with secure HTTP-only cookie)
-- CAPS branded UI with responsive dashboard
-- Add student
-- Search, edit, and delete student
-- Log attendance and grade entries
-- Search, edit, and delete records
-- Dashboard cards + charts
-- Analytics page with insights
-- Google Apps Script + Google Sheets backend integration
+### 🔐 Secure Role-Based Access Control (RBAC)
+- **Admin Accounts**: Have full read/write privileges. Admins can create students, mark attendance, assign letter grades, and view platform-wide analytics.
+- **Student Accounts**: Have restricted read-only access. Students can log in to view their personal attendance records and assigned grades, but cannot alter data or view other students' information.
 
-## 1. Local setup
+### 📊 Admin Analytics Dashboard
+- View real-time platform statistics (Total Students, Overall Attendance, Grades Assigned).
+- Interactive **Attendance Bar Chart** comparing 'Present' vs 'Absent' counts across all tracked events.
+- Interactive **Grade Distribution Chart** visualizing the curve of letter grades (A, B, C, D, F) awarded across all subjects.
 
-1. Install dependencies:
+### 📝 Attendance & Grades Trackers
+- Dynamic rosters that adapt to the currently selected Subject or Event.
+- Seamless dropdowns for assigning letter grades and one-click toggle buttons for attendance.
+- **Export Engine**: Instantly export any class roster to a `.CSV` file or automatically copy the data and redirect to a blank Google Sheet for external manipulation.
 
+### 💾 Local JSON Persistence
+- Data is stored lightning-fast using local filesystem reads/writes into the `data/` directory (`users.json`, `attendance.json`, `grades.json`), removing the need for a complex external database during development.
+
+---
+
+## Getting Started
+
+### 1. Installation
+Clone the repository and install the required dependencies:
 ```bash
 npm install
 ```
 
-2. Create `.env` from `.env.example` and fill values:
-
+### 2. Environment Variables
+To ensure secure login sessions, you need to create a `.env` file in the root of your project. You can copy the `.env.example` file and populate it:
 ```env
+JWT_SECRET=replace_with_a_long_random_secure_string
 NEXT_PUBLIC_APP_NAME=CAPS
-NEXT_PUBLIC_DEMO_EMAIL=admin@caps.local
-NEXT_PUBLIC_DEMO_PASSWORD=123456
-GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/XXXXXXXX/exec
-GOOGLE_APPS_SCRIPT_API_KEY=your_api_key
-JWT_SECRET=replace_with_a_long_random_string
 ```
 
-3. Run dev server:
+### 3. Login Credentials
+When you start the app, the database is pre-populated with a default Admin account:
+- **Email:** `admin@caps.cu`
+- **Password:** `admin`
 
+Any new students added by the Admin through the platform will automatically be assigned the default password: `12345`.
+
+### 4. Running the Development Server
 ```bash
 npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 2. Google Apps Script backend setup
+---
 
-1. Create a Google Sheet.
-2. Open Extensions -> Apps Script.
-3. Replace generated content with [apps-script/Code.gs](apps-script/Code.gs).
-4. In Apps Script, open Project Settings -> Script properties and add:
-   - `API_KEY`: same value as `GOOGLE_APPS_SCRIPT_API_KEY` in your Next.js `.env`.
-5. Deploy:
-   - Deploy -> New deployment
-   - Type: Web app
-   - Execute as: Me
-   - Who has access: Anyone
-6. Copy the web app URL into `GOOGLE_APPS_SCRIPT_URL`.
+## Production Deployment (Vercel)
 
-## 3. Submission guidance (as per assignment)
+If you plan to deploy this application to Vercel, please note the following:
 
-Your assignment asks for a published Google Site link. For best impression:
-
-1. Deploy Next.js app (Vercel recommended).
-2. Create a Google Site page that includes:
-   - Project title + short overview
-   - Deployed app link
-   - Demo credentials
-   - Architecture note: Next.js UI + Google Sheets via Apps Script
-3. Publish the Google Site and submit that public link.
-
-## Optional Supabase support
-
-This project currently uses Google Sheets (required by your brief), so Supabase is not needed.
-If evaluators ask for database-grade design, see [supabase/migrations.sql](supabase/migrations.sql) for a ready schema.
-
-## Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Production build
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+1. **Environment Variables:** You MUST add the `JWT_SECRET` manually in your Vercel Project Settings -> Environment Variables.
+2. **Serverless Filesystem:** Vercel utilizes serverless functions which run on a **read-only filesystem**. Because this application currently uses local `.json` files to store data, Vercel will block any attempts to "write" new attendance or grades in production. 
+3. **Database Migration:** To run this securely in production on Vercel, you should provision a Vercel Postgres database and migrate the API routes to use SQL. (Migration schema files like `attendance_setup.sql` and `grades_setup.sql` are provided in the repository).
