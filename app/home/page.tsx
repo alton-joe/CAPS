@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { CapsShell } from "@/components/caps-shell";
 import Link from "next/link";
+import type { Route } from "next";
 
-function HomeCard({ title, description, href }: { title: string; description: string; href: string }) {
+function HomeCard({ title, description, href }: { title: string; description: string; href: Route }) {
   return (
     <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div>
