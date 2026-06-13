@@ -1,0 +1,12 @@
+{
+  "Web Development Workshop": {
+    "student@caps.cu": true,
+    "altonjoe670@gmail.com": true
+  },
+  "Guest Lecture: Artificial Intelligence": {
+    "student@caps.cu": false
+  },
+  "Data Structures Midterm": {
+    "student@caps.cu": false
+  }
+}
